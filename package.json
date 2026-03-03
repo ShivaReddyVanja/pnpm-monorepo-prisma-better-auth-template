@@ -1,0 +1,9 @@
+{
+  "name": "interview-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PNPM Workspace Monorepo",
+  "scripts": {
+    "dev": "pnpm --filter \"*\" --parallel dev"
+  }
+}

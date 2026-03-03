@@ -1,0 +1,109 @@
+generator client {
+    provider      = "prisma-client-js"
+    output        = "../src/generated/prisma"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model User {
+    id            String      @id @default(uuid())
+    email         String      @unique
+    name          String?
+    emailVerified Boolean     @default(false)
+    image         String?
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    interviews    Interview[]
+    candidates    Candidate[]
+    sessions      Session[]
+    accounts      Account[]
+
+    @@map("user")
+}
+
+model Session {
+    id        String   @id
+    expiresAt DateTime
+    token     String
+    createdAt DateTime
+    updatedAt DateTime
+    ipAddress String?
+    userAgent String?
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([token])
+    @@map("session")
+}
+
+model Account {
+    id                    String    @id
+    accountId             String
+    providerId            String
+    userId                String
+    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    password              String?
+    createdAt             DateTime
+    updatedAt             DateTime
+
+    @@map("account")
+}
+
+model Verification {
+    id         String    @id
+    identifier String
+    value      String
+    expiresAt  DateTime
+    createdAt  DateTime?
+    updatedAt  DateTime?
+
+    @@map("verification")
+}
+
+model Interview {
+    id           String      @id @default(uuid())
+    role         String
+    description  String
+    instructions String?
+    difficulty   Difficulty
+    recruiterId  String
+    recruiter    User        @relation(fields: [recruiterId], references: [id])
+    candidates   Candidate[]
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @updatedAt
+
+    @@map("interview")
+}
+
+model Candidate {
+    id           String    @id @default(uuid())
+    name         String
+    email        String
+    phone        String
+    resumeUrl    String
+    parsedResume String?
+    interviewId  String
+    interview    Interview @relation(fields: [interviewId], references: [id])
+    recruiterId  String
+    recruiter    User      @relation(fields: [recruiterId], references: [id])
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+
+    @@unique([email, interviewId])
+    @@map("candidate")
+}
+
+enum Difficulty {
+    EASY
+    MEDIUM
+    HARD
+}

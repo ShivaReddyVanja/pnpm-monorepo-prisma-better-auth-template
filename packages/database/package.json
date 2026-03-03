@@ -1,0 +1,23 @@
+{
+    "name": "@repo/database",
+    "version": "0.1.0",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
+    "type": "module",
+    "license": "MIT",
+    "scripts": {
+        "db:generate": "prisma generate",
+        "db:push": "prisma db push",
+        "db:studio": "prisma studio"
+    },
+    "dependencies": {
+        "@prisma/adapter-pg": "^7.4.2",
+        "@prisma/client": "latest",
+        "pg": "^8.19.0"
+    },
+    "devDependencies": {
+        "@types/pg": "^8.18.0",
+        "prisma": "latest",
+        "typescript": "latest"
+    }
+}
