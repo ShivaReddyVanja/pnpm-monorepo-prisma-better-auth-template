@@ -5,7 +5,7 @@ import { auth } from "./auth.js";
 const authRouter: Router = Router();
 
 // Handle all auth routes
-authRouter.all("*", (req, res) => {
+authRouter.use((req, res) => {
     return toNodeHandler(auth.handler)(req, res);
 });
 
